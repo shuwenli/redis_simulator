@@ -26,11 +26,33 @@ class RedisCommand {
           return this.del_command(); 
           break;
         }
+        case 'INCR':{
+          return this.incr_command();
+          break;
+        }
         default:{
           return "-This Command is NOT supported\r\n";
         }
         
       }
+    }
+
+    incr_command(){
+      var i, n = this.params.length, x=0;
+      if (n<1) return "-Too few Arguments\r\n";
+ 
+      var value = this.getKey(this.params[0]);
+      if(value){
+        if(isNaN(value))
+          return "-The Value is NOT number\r\n";
+        else{
+          var added = parseInt(value)+1;
+          this.setKey(this.params[0],added.toString());
+          return ":"+ added.toString() + "\r\n";
+        }
+      }else
+         return "$-1\r\n";
+
     }
 
      set_command(){
